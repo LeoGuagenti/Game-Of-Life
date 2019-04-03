@@ -7,15 +7,25 @@ var row = 300;
 var col = 300;
 
 //pixel width and height (resolution x resolution)
-var resolution = 3; 
+console.log(canvas.height);
+var resolution = canvas.height / row; 
+console.log(resolution);
+var speed = 200; //default 50
 
 //generates random seed for alive pixel spawner
 var seed = Math.floor(Math.random() * (1000000 - -1000000 + 1)) + -1000000;
 
-//generates a random frequency for spawn rate
+//generates frequency based on last digit of seed
 //smaller the frequency the higher the spawn rate
-var frequency = Math.floor(Math.random() * (25 - 2 + 1)) + 2;
-
+var frequency;
+	if(seed < 0){
+		 frequency = (seed % 10) * -1;
+	}else{
+		frequency = (seed % 10);
+		if(frequency == 0){
+			frequency++;
+		}
+	}
 
 //2d array which is displayed
 var cell = new Array(row);
@@ -61,8 +71,26 @@ function drawCells(){
 	//draws grid of white and black cells
 	for(var i = 0; i < cell.length; i++){
 		for(var j = 0; j < cell[0].length; j++){
+			neighbors = countNeighbors(i, j);
 			if(cell[i][j] == 1){
-				context.fillStyle = "#FFFFFF";
+				//this section is draw out for customization
+				if(neighbors == 1){
+					context.fillStyle = "#FF0000";
+				}else if(neighbors == 2){
+					context.fillStyle = "#0abf00";
+				}else if(neighbors == 3){
+					context.fillStyle = "#0abf00";
+				}else if(neighbors == 4){
+					context.fillStyle = "#FF0000";
+				}else if(neighbors == 5){
+					context.fillStyle = "#FF0000";
+				}else if(neighbors == 6){
+					context.fillStyle = "#FF0000";
+				}else if(neighbors == 7){
+					context.fillStyle = "#FF0000";
+				}else if(neighbors == 8){
+					context.fillStyle = "#FF0000";
+				}
 				context.fillRect(xPos, yPos ,resolution, resolution);
 			}else{
 				context.fillStyle = "#000000";
@@ -160,7 +188,6 @@ function runSimulation(){
 	//randomly generated seed and frequency can be found in the console
 	//note to self: make visible by simulation
 	console.log("Seed: " + seed);
-	console.log("Frequency: " + frequency);
 	
 	randomizeCells();
 	drawCells();
@@ -168,7 +195,7 @@ function runSimulation(){
 		advance();
 		clearCanvas();
 		drawCells();
-	}, 50);
+	}, speed);
 }
 
 window.onload = function(){
